@@ -1,0 +1,40 @@
+# traefik.toml.base
+traefikLogsFile = "/data/traefik.log"
+accessLogsFile = "/data/access.log"
+logLevel = "DEBUG"
+defaultEntryPoints = ["http", "https"]
+
+[consul]
+endpoint = "consul:8500"
+watch = true
+prefix = "traefik"
+
+[web]
+address = ":8888"
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":8080"
+
+[file]
+watch = true
+
+[backends]
+  [backends.backend1]
+    [backends.backend1.circuitbreaker]
+      expression = "NetworkErrorRatio() > 0.5"
+    [backends.backend1.servers.server1]
+    url = "http://node1:3000"
+    weight = 10
+    [backends.backend1.servers.server2]
+    url = "http://node2:3000"
+    weight = 10
+    [backends.backend1.servers.server3]
+    url = "http://node3:3000"
+    weight = 10
+[frontends]
+  [frontends.frontend1]
+  backend = "backend1"
+  passHostHeader = true
+  priority = 10
+  entrypoints = ["http"] 

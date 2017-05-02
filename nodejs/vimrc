@@ -1,0 +1,76 @@
+filetype off
+filetype plugin off
+filetype indent off
+
+if has('vim_starting')
+  set nocompatible
+  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
+    :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+  endif
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+call neobundle#begin(expand('~/.vim/bundle'))
+let g:neobundle_default_git_protocol='https'
+
+NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/vimfiler'
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neocomplete'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'thinca/vim-quickrun'
+
+NeoBundle 'nanotech/jellybeans.vim'
+
+NeoBundle 'scrooloose/syntastic'
+
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'myhere/vim-nodejs-complete'
+NeoBundle 'digitaltoad/vim-jade'
+NeoBundleCheck
+call neobundle#end()
+
+filetype on
+filetype indent on
+filetype plugin on
+syntax on
+
+set number
+set showmode
+set title
+set ruler
+set showcmd
+set showmatch
+set laststatus=2
+
+set t_Co=256
+colorscheme jellybeans
+
+au InsertEnter * hi StatusLine guifg=DarkBlue guibg=DarkYellow gui=none ctermfg=Blue ctermbg=Yellow cterm=none
+au InsertLeave * hi StatusLine guifg=DarkBlue guibg=DarkGray gui=none ctermfg=Blue ctermbg=DarkGray cterm=none
+
+nmap <Leader>r <plug>(quickrun)
+
+let g:vimfiler_safe_mode_by_default = 0
+
+
+
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_start_level=2
+let g:indent_guides_auto_colors=0
+let g:indent_guides_guide_size=1
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#444433 ctermbg=black
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#333344 ctermbg=darkgray
+
+autocmd FileType coffee,javascript,jade setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab
+
+autocmd FileType javascript setlocal omnifunc=nodejscomplete#CompleteJS
+if !exists('g:neocomplcache_omni_functions')
+	let g:neocomplcache_omni_functions = {}
+endif
+let g:neocomplcache_omni_functions.javascript = 'nodejscomplete#CompleteJS'
+let g:node_usejscomplete = 1
